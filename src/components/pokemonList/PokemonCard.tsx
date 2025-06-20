@@ -44,17 +44,26 @@ const PokemonCard = ({
       if (isFavorite) {
         await removeFavoritePokemon(String(pokemon.id));
         setIsFavorite(false);
-        toast.info(`${capitalize(pokemon.name)} removed from favorites!`);
+        toast.info(`${capitalize(pokemon.name)} removed from favorites!`, {
+          icon: false,
+          hideProgressBar: true,
+        });
         onToggleFavorite?.(pokemon.id, false);
       } else {
         await addFavoritePokemon(String(pokemon.id), pokemon.name);
         setIsFavorite(true);
-        toast.success(`${capitalize(pokemon.name)} added to favorites!`);
+        toast.success(`${capitalize(pokemon.name)} added to favorites!`, {
+          icon: false,
+          hideProgressBar: true,
+        });
         onToggleFavorite?.(pokemon.id, true);
       }
     } catch (error) {
       console.error("Failed to toggle favorite", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.", {
+        icon: false,
+        hideProgressBar: true,
+      });
     }
   };
 

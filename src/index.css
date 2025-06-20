@@ -28,3 +28,10 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+.Toastify__toast-theme--dark {
+  background-color: #111e24;
+  border: transparent;
+  color: white !important;
+  border-radius: 12px !important;
+  font-family: "Outfit", sans-serif !important;
+}

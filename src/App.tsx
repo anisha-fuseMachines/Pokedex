@@ -9,7 +9,6 @@ import PokemonList from "./pages/PokemonList";
 import FavouriteList from "./pages/FavoritePokemon";
 import PokemonDetail from "./pages/PokemonDetails";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { PokemonProvider } from "./global-state/contexts/PokemonProvider";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import LoginButton from "./pages/Login";
@@ -21,7 +20,7 @@ function App() {
     <PokemonProvider>
       <Router>
         <div className="flex flex-col items-center justify-center mx-auto w-full min-h-screen bg-background md:w-5xl xl:w-[1550px]">
-          <ToastContainer position="bottom-right" autoClose={3000} />
+          <ToastContainer position="top-right" autoClose={3000} theme="dark" />
           <Header />
           <Routes>
             {/* Public login route */}

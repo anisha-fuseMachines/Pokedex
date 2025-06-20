@@ -191,7 +191,7 @@ const PokemonList = () => {
       {!hasAnyFilter && visibleCount < pokemonList.length && (
         <div className="flex justify-center mb-6">
           <button
-            className="bg-pink-200 hover:bg-pink-300 text-white px-6 py-2 rounded-lg"
+            className="bg-pink-200 hover:bg-pink-300 text-pink-700 px-6 py-2 rounded-lg"
             onClick={() => dispatch({ type: "LOAD_MORE" })}
           >
             Load More

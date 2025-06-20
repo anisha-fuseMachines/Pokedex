@@ -1,4 +1,3 @@
-import React from "react";
 import { getTypeBadge } from "../../utils/getTypeBadge";
 
 interface TypeBadgeProps {

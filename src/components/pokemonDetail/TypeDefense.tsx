@@ -5,11 +5,14 @@ import {
   getEffectDescription,
   getEffectLabel,
 } from "../../utils/getDefenseData";
-import type { TypeDefenseProps } from "../../types/pokemonType";
+// import type { TypeDefenseProps } from "../../types/pokemonType";
 import { typeAbbreviations, typeGroups } from "../../data/constants";
-
-const TypeDefense: React.FC<TypeDefenseProps> = ({ pokemon }) => {
-  const types = pokemon.types?.map((t) => t.type.name) ?? [];
+import type { PokemonDetail } from "../../types/pokemonList";
+interface TypeDefenseProps {
+  pokemonType: PokemonDetail["types"];
+}
+const TypeDefense = ({ pokemonType }: TypeDefenseProps) => {
+  const types = pokemonType.map((t) => t.type.name) ?? [];
   if (!types || types.length === 0) {
     return <div>Unknown types</div>;
   }
@@ -25,7 +28,7 @@ const TypeDefense: React.FC<TypeDefenseProps> = ({ pokemon }) => {
       </h2>
       <h3 className="my-3 text-lg font-normal text-secondary">
         The effectiveness of each type on{" "}
-        <em className="italic">{pokemon.name}</em>.
+        {/* <em className="italic">{pokemonType}</em>. */}
       </h3>
 
       <div className="grid grid-cols-6 gap-2 mb-3">

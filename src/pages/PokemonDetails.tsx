@@ -177,7 +177,7 @@ const PokemonDetail = () => {
         {/* Stats + Type Defense */}
         <div className="flex flex-col md:flex-row gap-4 md:gap-6 mt-4 md:mt-6">
           <AbilityStat pokemonDetail={pokemonDetail} />
-          <TypeDefense pokemon={pokemonDetail} />
+          <TypeDefense pokemonType={pokemonDetail.types} />
         </div>
 
         {/* Moves */}

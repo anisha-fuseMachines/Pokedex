@@ -1,6 +1,5 @@
 import type { Pokemon } from "../../types/registration";
 
-// StarterCard Component
 export const StarterCard = ({
   pokemon,
   selectedStarter,
@@ -12,8 +11,6 @@ export const StarterCard = ({
 }) => {
   const isGrass = ["Bulbasaur", "Chikorita", "Treecko"].includes(pokemon.name);
   const isFire = ["Charmander", "Cyndaquil", "Torchic"].includes(pokemon.name);
-  const isWater = ["Squirtle", "Totodile", "Mudkip"].includes(pokemon.name);
-
   const typeColor = isGrass ? "green" : isFire ? "orange" : "blue";
   const typeName = isGrass ? "Grass" : isFire ? "Fire" : "Water";
 

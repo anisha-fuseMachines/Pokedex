@@ -1,7 +1,10 @@
 import { createContext, useContext } from "react";
-import type { EvolutionStages, PokemonDetail, PokemonListItem } from "../../types/pokemonList";
+import type {
+  EvolutionStages,
+  PokemonDetail,
+  PokemonListItem,
+} from "../../types/pokemonList";
 import type { PokemonAction } from "../reducers/PokemonReducer";
-
 
 export interface PokemonState {
   pokemonList: PokemonListItem[];
@@ -13,17 +16,16 @@ export interface PokemonState {
   detailLoading: boolean;
 }
 
-
 export interface PokemonContextType extends PokemonState {
   dispatch: React.Dispatch<PokemonAction>;
 }
 
-
-export const PokemonContext = createContext<PokemonContextType>({} as PokemonContextType);
+export const PokemonContext = createContext<PokemonContextType>(
+  {} as PokemonContextType
+);
 
 export const usePokemonContext = () => useContext(PokemonContext);
 
-// initial state stays the same
 export const initialState: PokemonState = {
   pokemonList: [],
   pokemonDetail: null,

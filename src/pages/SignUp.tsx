@@ -8,7 +8,6 @@ import {
 } from "../components/Signup/StarterPokemon";
 import { NavigationButtons } from "../components/Signup/NavigationButtons";
 
-// Import avatar images
 const maleAvatar = "/images/trainer-male.png";
 const femaleAvatar = "/images/trainer-female.png";
 
@@ -119,7 +118,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="[height:calc(100vh_-_67px)] flex flex-col items-center justify-center p-4">
       {/* Header */}
       <div className="w-full max-w-2xl flex mb-8">
         <div className="text-sm font-medium bg-yellow-400 px-3 py-1 rounded-full">

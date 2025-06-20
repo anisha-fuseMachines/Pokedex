@@ -1,6 +1,6 @@
 import { AiOutlineLogout } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0, User } from "@auth0/auth0-react";
 
 const Header = () => {
   const { isAuthenticated, logout, isLoading } = useAuth0();
@@ -36,14 +36,17 @@ const Header = () => {
           {isLoading ? (
             <span className="text-white">Loading…</span>
           ) : isAuthenticated ? (
-            <button
-              onClick={() =>
-                logout({ logoutParams: { returnTo: window.location.origin } })
-              }
-              className="px-3 py-1 hover:scale-105"
-            >
-              <AiOutlineLogout size={24} />
-            </button>
+            <>
+              {User}
+              <button
+                onClick={() =>
+                  logout({ logoutParams: { returnTo: window.location.origin } })
+                }
+                className="px-3 py-1 hover:scale-105"
+              >
+                <AiOutlineLogout size={24} />
+              </button>
+            </>
           ) : (
             <Link
               to="/login"

@@ -5,7 +5,7 @@ interface TypeBadgeProps {
   type: string;
 }
 
-const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
+const TypeBadge = ({ type }: TypeBadgeProps) => {
   const typeStyles = getTypeBadge(type);
 
   return (

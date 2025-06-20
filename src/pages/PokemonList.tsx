@@ -12,7 +12,6 @@ const PokemonList = () => {
   const { pokemonList, loading, visibleCount, dispatch } = usePokemonContext();
   const visiblePokemon = pokemonList.slice(0, visibleCount);
 
-  // initial applied filters from localStorage
   const [appliedFilters, setAppliedFilters] = useState<{
     types: string[];
     habitats: string[];
@@ -46,7 +45,7 @@ const PokemonList = () => {
   });
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
-  // enrich partial results with full data
+  // results with full data
   const enrichResults = useCallback(
     (results: PokemonListItem[]) =>
       results.map((p) => {
@@ -56,7 +55,6 @@ const PokemonList = () => {
     [pokemonList]
   );
 
-  // perform name search only
   const handleSearch = useCallback(async () => {
     if (!searchText.trim()) {
       setFilteredPokemon(null);
@@ -108,12 +106,10 @@ const PokemonList = () => {
     setDrawerOpen(false);
   }, []);
 
-  // load backend filter options
   useEffect(() => {
     fetchFilters().then(setFilters).catch(console.error);
   }, []);
 
-  // apply saved filters on mount
   useEffect(() => {
     if (
       appliedFilters.types.length ||
@@ -124,14 +120,12 @@ const PokemonList = () => {
     }
   }, [appliedFilters, handleFilterApply]);
 
-  // determine if any active criterion
   const hasAnyFilter =
     Boolean(searchText.trim()) ||
     appliedFilters.types.length > 0 ||
     appliedFilters.habitats.length > 0 ||
     Boolean(appliedFilters.classification);
 
-  // choose display list
   const displayList = hasAnyFilter ? filteredPokemon ?? [] : visiblePokemon;
 
   const activeFilterCount =
@@ -194,11 +188,10 @@ const PokemonList = () => {
         )}
       </div>
 
-      {/* Load More (only if no search/filters) */}
       {!hasAnyFilter && visibleCount < pokemonList.length && (
         <div className="flex justify-center mb-6">
           <button
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg"
+            className="bg-pink-200 hover:bg-pink-300 text-white px-6 py-2 rounded-lg"
             onClick={() => dispatch({ type: "LOAD_MORE" })}
           >
             Load More

@@ -16,7 +16,7 @@ const FavoriteList = () => {
     const loadFavorites = async () => {
       setLoading(true);
       try {
-        const favs = await getFavoritePokemons(); // [{id,name},…]
+        const favs = await getFavoritePokemons();
         const enriched = favs.flatMap((f: { id: string; name: string }) => {
           const full = pokemonList.find(
             (p) => p.id === +f.id || p.name === f.name
@@ -35,7 +35,6 @@ const FavoriteList = () => {
 
   const handleToggle = async (id: number, isFav: boolean) => {
     if (!isFav) {
-      // already removed on backend by PokemonCard; just update locally
       setFavorites((favs) => favs.filter((p) => p.id !== id));
     }
   };

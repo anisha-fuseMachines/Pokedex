@@ -1,4 +1,3 @@
-import React from "react";
 import TypeBadge from "../common/TypeBadge";
 
 interface EvolutionStage {
@@ -18,10 +17,7 @@ interface Props {
   evolutionPaths: EvolutionNode[][];
 }
 
-const EvolutionChain: React.FC<Props> = ({
-  evolutionStages,
-  evolutionPaths,
-}) => {
+const EvolutionChain = ({ evolutionStages, evolutionPaths }: Props) => {
   const getStageData = (name: string) =>
     evolutionStages.find((stage) => stage.name === name);
 

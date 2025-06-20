@@ -1,16 +1,15 @@
-import type { StylesConfig, ThemeConfig } from "react-select";
+import type { StylesConfig } from "react-select";
 
 interface FilterOption {
   value: string;
   label: string;
 }
 
-// Neutral color palette
 const white = "#FFFFFF";
-const lightGray = "#F9FAFB"; // light hover
-const grayBorder = "#D1D5DB"; // border
-const darkText = "#111827"; // slightly darker than before
-const neutralText = "#6B7280"; // placeholder and icon
+const lightGray = "#F9FAFB";
+const grayBorder = "#D1D5DB";
+const darkText = "#111827";
+const neutralText = "#6B7280";
 
 export const selectStyles: StylesConfig<FilterOption, boolean> = {
   control: (base, state) => ({

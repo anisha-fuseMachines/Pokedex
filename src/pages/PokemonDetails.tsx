@@ -15,13 +15,11 @@ import { useEffect, useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import PokemonMoves from "../components/pokemonDetail/PokemonMoves";
 import NoDetailFound from "../components/common/NoDetailFound";
-import { usePokemonContext } from "../global-state/contexts/PokemonContext";
-import PokemonCard from "../components/pokemonList/PokemonCard";
-import PokemonNavCard from "../components/pokemonDetail/PokemonNavCard";
+// import { usePokemonContext } from "../global-state/contexts/PokemonContext";
 
 const PokemonDetail = () => {
-  const { pokemonList, visibleCount, dispatch } = usePokemonContext();
-  const visiblePokemon = pokemonList.slice(0, visibleCount);
+  // const { pokemonList, visibleCount, dispatch } = usePokemonContext();
+  // const visiblePokemon = pokemonList.slice(0, visibleCount);
   const { selectedPokemon } = useParams<{ selectedPokemon: string }>();
   const { pokemonDetail, evolutionStages, evolutionPaths, loading } =
     usePokemonDetail(selectedPokemon || "");

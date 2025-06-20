@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type { PokemonDetail } from "../../types/pokemonList";
 
 interface PokemonMovesProps {
   moves: PokemonDetail["moves"];
 }
 
-const PokemonMoves: React.FC<PokemonMovesProps> = ({ moves }) => {
+const PokemonMoves = ({ moves }: PokemonMovesProps) => {
   const [showAllMoves, setShowAllMoves] = useState(false);
   const initialMovesToShow = 20; // Number of moves to show initially
 

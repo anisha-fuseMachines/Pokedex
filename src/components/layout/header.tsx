@@ -25,12 +25,12 @@ const Header = () => {
         </Link>
 
         <div className="flex items-center space-x-6">
-          <div className="flex items-center bg-gray-800 px-3 py-1 rounded-full">
+          {/* <div className="flex items-center bg-gray-800 px-3 py-1 rounded-full">
             <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
             <span className="text-sm font-medium text-capitalize">
               {getUsername()}
             </span>
-          </div>
+          </div> */}
 
           <nav className="flex items-center space-x-4 text-base md:text-lg">
             <Link

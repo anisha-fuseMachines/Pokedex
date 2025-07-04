@@ -73,7 +73,7 @@ const SearchFilterDrawer = ({
         backgroundImage:
           "linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%)",
         backdropFilter: "blur(12px)",
-        backgroundColor: "#050817", // Optional: light glass effect
+        backgroundColor: "#050817",
       }}
     >
       <div className="p-4 flex flex-col gap-4">

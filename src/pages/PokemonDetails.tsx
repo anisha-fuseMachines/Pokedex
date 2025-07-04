@@ -15,22 +15,24 @@ import { useEffect, useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import PokemonMoves from "../components/pokemonDetail/PokemonMoves";
 import NoDetailFound from "../components/common/NoDetailFound";
-// import { usePokemonContext } from "../global-state/contexts/PokemonContext";
+import { useAuth0 } from "@auth0/auth0-react";
+import LoginModal from "../components/common/LoginModal"; // Import from separate file
 
 const PokemonDetail = () => {
-  // const { pokemonList, visibleCount, dispatch } = usePokemonContext();
-  // const visiblePokemon = pokemonList.slice(0, visibleCount);
   const { selectedPokemon } = useParams<{ selectedPokemon: string }>();
   const { pokemonDetail, evolutionStages, evolutionPaths, loading } =
     usePokemonDetail(selectedPokemon || "");
   const [isFavorite, setIsFavorite] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { isAuthenticated } = useAuth0(); // Remove loginWithRedirect here
 
   useEffect(() => {
-    if (!pokemonDetail) return;
+    if (!pokemonDetail || !isAuthenticated) return;
+
     getIsPokemonAlreadyFavorited(pokemonDetail.id)
       .then(setIsFavorite)
       .catch(console.error);
-  }, [pokemonDetail]);
+  }, [pokemonDetail, isAuthenticated]);
 
   if (!selectedPokemon || !pokemonDetail) {
     return <NoDetailFound pokemonName={selectedPokemon || "Unknown"} />;
@@ -45,6 +47,11 @@ const PokemonDetail = () => {
     e.stopPropagation();
     if (!pokemonDetail) return;
 
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+
     try {
       if (isFavorite) {
         await removeFavoritePokemon(String(pokemonDetail.id));
@@ -58,35 +65,15 @@ const PokemonDetail = () => {
     }
   };
 
+  const handleCloseModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowLoginModal(false);
+  };
+
   return (
     <div className="flex flex-col md:flex-row gap-4 md:gap-8">
-      {/* <div className="md:hidden p-4">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-blue-500 hover:underline"
-        >
-          <span className="text-xl">&larr;</span> Back to List
-        </Link>
-      </div> */}
-
-      {/* Sidebar - Hidden on Mobile */}
-      {/* <div className="hidden md:block h-screen overflow-y-auto w-[300px] no-scrollbar">
-        {visiblePokemon.map((pokemon) => (
-          <Link to={`/${pokemon.name}`} key={pokemon.id}>
-            <PokemonNavCard pokemon={pokemon} />
-          </Link>
-        ))}
-        {visibleCount < pokemonList.length && (
-          <div className="flex justify-center mb-6">
-            <button
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg"
-              onClick={() => dispatch({ type: "LOAD_MORE" })}
-            >
-              Load More
-            </button>
-          </div>
-        )}
-      </div> */}
+      {/* Use LoginModal component */}
+      <LoginModal isOpen={showLoginModal} onClose={handleCloseModal} />
 
       {/* Main Content */}
       <div className="flex flex-col p-4 w-full">
@@ -121,10 +108,14 @@ const PokemonDetail = () => {
                 onClick={toggleFavorite}
                 className="focus:outline-none ml-auto"
               >
-                {isFavorite ? (
-                  <GoHeartFill className="text-red-500 w-6 h-6 md:w-8 md:h-8" />
+                {isAuthenticated ? (
+                  isFavorite ? (
+                    <GoHeartFill className="text-red-500 w-6 h-6 md:w-8 md:h-8 hover:scale-110 transition-all" />
+                  ) : (
+                    <GoHeart className="text-white w-6 h-6 md:w-8 md:h-8 hover:scale-110 transition-all" />
+                  )
                 ) : (
-                  <GoHeart className="text-gray-300 w-6 h-6 md:w-8 md:h-8" />
+                  <GoHeart className="text-gray-500 w-6 h-6 md:w-8 md:h-8 hover:text-white transition-colors" />
                 )}
               </button>
             </div>

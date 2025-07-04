@@ -14,6 +14,7 @@ import ProtectedRoute from "./components/common/ProtectedRoute";
 import LoginButton from "./pages/Login";
 import SignupPage from "./pages/SignUp";
 import PageNotFound from "./components/common/PageNotFound";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -25,13 +26,14 @@ function App() {
           <Routes>
             {/* Public login route */}
             <Route path="/login" element={<LoginButton />} />
-
+            <Route path="/" element={<PokemonList />} />
+            <Route path="/:selectedPokemon" element={<PokemonDetail />} />
             {/* Protected routes wrapper */}
             <Route element={<ProtectedRoute />}>
               <Route path="/signup" element={<SignupPage />} />
-              <Route path="/" element={<PokemonList />} />
+
               <Route path="/favorite" element={<FavouriteList />} />
-              <Route path="/:selectedPokemon" element={<PokemonDetail />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Route>
 
             <Route path="*" element={<PageNotFound />} />

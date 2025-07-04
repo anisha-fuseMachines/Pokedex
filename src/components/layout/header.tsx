@@ -1,14 +1,22 @@
 import { AiOutlineLogout } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { useAuth0, User } from "@auth0/auth0-react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Header = () => {
-  const { isAuthenticated, logout, isLoading } = useAuth0();
+  const { isAuthenticated, logout, isLoading, user } = useAuth0();
+  const { loginWithRedirect } = useAuth0();
+  const getUsername = () => {
+    if (isLoading) return "Loading...";
+    if (isAuthenticated && user) {
+      return user.nickname || user.name || "User";
+    }
+    return "Guest";
+  };
 
   return (
     <header className="w-full text-white">
       <div className="w-full p-4 flex items-center justify-between">
-        <Link to="/">
+        <Link to="/" className="flex items-center">
           <img
             src="/assets/logo.png"
             alt="Logo"
@@ -16,46 +24,63 @@ const Header = () => {
           />
         </Link>
 
-        <nav className="flex items-center space-x-4 text-base md:text-lg">
-          <Link
-            to="/"
-            className="text-white hover:text-yellow-400 transition-colors duration-200"
-          >
-            Pokèmon
-          </Link>
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center bg-gray-800 px-3 py-1 rounded-full">
+            <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+            <span className="text-sm font-medium text-capitalize">
+              {getUsername()}
+            </span>
+          </div>
 
-          {isAuthenticated && (
+          <nav className="flex items-center space-x-4 text-base md:text-lg">
             <Link
-              to="/favorite"
+              to="/"
               className="text-white hover:text-yellow-400 transition-colors duration-200"
             >
-              Favourite
+              Pokèmon
             </Link>
-          )}
 
-          {isLoading ? (
-            <span className="text-white">Loading…</span>
-          ) : isAuthenticated ? (
-            <>
-              {User}
+            {isAuthenticated && (
+              <>
+                <Link
+                  to="/favorite"
+                  className="text-white hover:text-yellow-400 transition-colors duration-200"
+                >
+                  Favourite
+                </Link>
+                <Link
+                  to="/profile"
+                  className="text-white hover:text-yellow-400 transition-colors duration-200"
+                >
+                  Profile
+                </Link>
+              </>
+            )}
+
+            {isAuthenticated ? (
               <button
                 onClick={() =>
                   logout({ logoutParams: { returnTo: window.location.origin } })
                 }
-                className="px-3 py-1 hover:scale-105"
+                className="flex items-center text-white hover:text-red-400 transition-colors"
+                title="Log out"
               >
                 <AiOutlineLogout size={24} />
               </button>
-            </>
-          ) : (
-            <Link
-              to="/login"
-              className="ml-4 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-            >
-              Log In
-            </Link>
-          )}
-        </nav>
+            ) : (
+              <button
+                className="ml-2 px-3 py-1 border-1 border-pink-200 rounded-2xl text-white hover:bg-pink-700 transition text-sm"
+                onClick={() =>
+                  loginWithRedirect({
+                    appState: { returnTo: window.location.pathname },
+                  })
+                }
+              >
+                Log In
+              </button>
+            )}
+          </nav>
+        </div>
       </div>
     </header>
   );

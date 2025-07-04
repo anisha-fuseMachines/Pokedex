@@ -7,6 +7,7 @@ import {
   StarterCard,
 } from "../components/Signup/StarterPokemon";
 import { NavigationButtons } from "../components/Signup/NavigationButtons";
+import { useNavigate } from "react-router-dom";
 
 const maleAvatar = "/images/trainer-male.png";
 const femaleAvatar = "/images/trainer-female.png";
@@ -53,7 +54,7 @@ const SignupPage = () => {
   const [name, setName] = useState("");
   const [region, setRegion] = useState<Region>("Kanto");
   const [starter, setStarter] = useState("Bulbasaur");
-
+  const navigate = useNavigate();
   const startersByRegion: Record<Region, Pokemon[]> = {
     Kanto: [
       {
@@ -112,9 +113,18 @@ const SignupPage = () => {
   const back = () => setStep((s) => Math.max(s - 1, 1));
 
   const handleSubmit = () => {
-    alert(
-      `Registration complete! Welcome, ${name}! Your journey in ${region} begins with ${starter}!`
-    );
+    // Save trainer data to localStorage
+    const trainerData = {
+      gender,
+      name,
+      region,
+      starter,
+      createdAt: new Date().toISOString(),
+    };
+    localStorage.setItem("trainerProfile", JSON.stringify(trainerData));
+
+    // Redirect to profile page
+    navigate("/profile");
   };
 
   return (

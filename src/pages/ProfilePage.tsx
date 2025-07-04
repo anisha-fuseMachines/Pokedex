@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { GoPencil } from "react-icons/go";
+import { AiOutlineLogout } from "react-icons/ai";
 
 interface TrainerProfile {
   gender: "male" | "female";
@@ -110,10 +111,10 @@ const ProfilePage = () => {
     typeColors[pokemonType] || "bg-gray-100 text-gray-800 border-gray-300";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 py-12 px-4">
+    <div className="min-h-screen py-12 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
+          <h1 className="text-3xl md:text-4xl font-bold text-white">
             Trainer Profile
           </h1>
           <div className="flex gap-3">
@@ -128,9 +129,8 @@ const ProfilePage = () => {
               onClick={() =>
                 logout({ logoutParams: { returnTo: window.location.origin } })
               }
-              className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
             >
-              Log Out
+              <AiOutlineLogout className="mr-2 text-white" size={24} />
             </button>
           </div>
         </div>
@@ -215,74 +215,6 @@ const ProfilePage = () => {
             )}
           </div>
         </div>
-
-        {/* Journey Timeline */}
-        {/* <div className="mt-8 bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">Your Journey</h3>
-
-          <div className="relative pl-8 border-l-2 border-gray-200 space-y-6">
-            <div className="relative">
-              <div className="absolute -left-11 w-8 h-8 rounded-full bg-red-500 flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-full"></div>
-              </div>
-              <div className="ml-4">
-                <h4 className="font-bold text-lg">Journey Begins</h4>
-                <p className="text-gray-600">
-                  Started your adventure in {trainerProfile.region} region with{" "}
-                  {trainerProfile.starter}
-                </p>
-                <p className="text-sm text-gray-500 mt-1">
-                  {new Date(trainerProfile.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-
-       
-            <div className="relative">
-              <div className="absolute -left-11 w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-full"></div>
-              </div>
-              <div className="ml-4">
-                <h4 className="font-bold text-lg text-gray-400">
-                  First Gym Badge
-                </h4>
-                <p className="text-gray-400">Earn your first gym badge</p>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="absolute -left-11 w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-full"></div>
-              </div>
-              <div className="ml-4">
-                <h4 className="font-bold text-lg text-gray-400">
-                  Pokémon League Challenge
-                </h4>
-                <p className="text-gray-400">Challenge the Elite Four</p>
-              </div>
-            </div>
-          </div>
-        </div> */}
-
-        {/* Stats Section */}
-        {/* <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl shadow p-4 text-center">
-            <div className="text-2xl font-bold text-gray-800">0</div>
-            <div className="text-gray-600">Pokémon Caught</div>
-          </div>
-          <div className="bg-white rounded-xl shadow p-4 text-center">
-            <div className="text-2xl font-bold text-gray-800">0</div>
-            <div className="text-gray-600">Gym Badges</div>
-          </div>
-          <div className="bg-white rounded-xl shadow p-4 text-center">
-            <div className="text-2xl font-bold text-gray-800">0</div>
-            <div className="text-gray-600">Battles Won</div>
-          </div>
-          <div className="bg-white rounded-xl shadow p-4 text-center">
-            <div className="text-2xl font-bold text-gray-800">1</div>
-            <div className="text-gray-600">Starter Pokémon</div>
-          </div>
-        </div> */}
       </div>
     </div>
   );

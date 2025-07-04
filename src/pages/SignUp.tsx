@@ -9,8 +9,10 @@ import {
 import { NavigationButtons } from "../components/Signup/NavigationButtons";
 import { useNavigate } from "react-router-dom";
 
-const maleAvatar = "/images/trainer-male.png";
-const femaleAvatar = "/images/trainer-female.png";
+const maleAvatar =
+  "http://archives.bulbagarden.net/wiki/Category:Generation_VIII_Versus_Trainer_sprites#/media/File:VSCamper_BDSP.png";
+const femaleAvatar =
+  "https://archives.bulbagarden.net/media/upload/7/7d/DawnChallenge_Platinum_1_BDSP.png?20211202131652";
 
 const ProgressBar = ({ progress }: { progress: number }) => (
   <div className="h-2 bg-gray-200">

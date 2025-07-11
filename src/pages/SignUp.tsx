@@ -8,47 +8,12 @@ import {
 } from "../components/Signup/StarterPokemon";
 import { NavigationButtons } from "../components/Signup/NavigationButtons";
 import { useNavigate } from "react-router-dom";
-
-const maleAvatar =
-  "http://archives.bulbagarden.net/wiki/Category:Generation_VIII_Versus_Trainer_sprites#/media/File:VSCamper_BDSP.png";
-const femaleAvatar =
-  "https://archives.bulbagarden.net/media/upload/7/7d/DawnChallenge_Platinum_1_BDSP.png?20211202131652";
-
-const ProgressBar = ({ progress }: { progress: number }) => (
-  <div className="h-2 bg-gray-200">
-    <div
-      className="h-full bg-red-600 transition-all duration-500"
-      style={{ width: `${progress}%` }}
-    ></div>
-  </div>
-);
-
-const StepIndicator = ({
-  step,
-  currentStep,
-}: {
-  step: number;
-  currentStep: number;
-}) => (
-  <div className="flex items-center">
-    <div
-      className={`w-10 h-10 rounded-full flex items-center justify-center ${
-        currentStep >= step
-          ? "bg-red-600 text-white"
-          : "bg-gray-200 text-gray-500"
-      } font-bold text-lg`}
-    >
-      {step}
-    </div>
-    {step < 3 && (
-      <div
-        className={`w-16 h-1 ${
-          currentStep > step ? "bg-red-600" : "bg-gray-200"
-        }`}
-      ></div>
-    )}
-  </div>
-);
+import { ProgressBar, StepIndicator } from "../components/Signup/ProgressSteps";
+import {
+  femaleAvatar,
+  maleAvatar,
+  startersByRegion,
+} from "../data/profileData";
 
 const SignupPage = () => {
   const [step, setStep] = useState(1);
@@ -56,76 +21,50 @@ const SignupPage = () => {
   const [name, setName] = useState("");
   const [region, setRegion] = useState<Region>("Kanto");
   const [starter, setStarter] = useState("Bulbasaur");
+  // New state for avatars
+  const [trainerAvatar, setTrainerAvatar] = useState(maleAvatar);
+  const [pokemonAvatar, setPokemonAvatar] = useState(
+    startersByRegion["Kanto"][0].image
+  );
   const navigate = useNavigate();
-  const startersByRegion: Record<Region, Pokemon[]> = {
-    Kanto: [
-      {
-        name: "Bulbasaur",
-        image:
-          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-      },
-      {
-        name: "Charmander",
-        image:
-          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png",
-      },
-      {
-        name: "Squirtle",
-        image:
-          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png",
-      },
-    ],
-    Johto: [
-      {
-        name: "Chikorita",
-        image:
-          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/152.png",
-      },
-      {
-        name: "Cyndaquil",
-        image:
-          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/155.png",
-      },
-      {
-        name: "Totodile",
-        image:
-          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/158.png",
-      },
-    ],
-    Hoenn: [
-      {
-        name: "Treecko",
-        image:
-          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/252.png",
-      },
-      {
-        name: "Torchic",
-        image:
-          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/255.png",
-      },
-      {
-        name: "Mudkip",
-        image:
-          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/258.png",
-      },
-    ],
-  };
 
   const next = () => setStep((s) => Math.min(s + 1, 3));
   const back = () => setStep((s) => Math.max(s - 1, 1));
 
+  // Update trainer avatar when gender changes
+  const handleSetGender = (g: Gender) => {
+    setGender(g);
+    setTrainerAvatar(g === "male" ? maleAvatar : femaleAvatar);
+  };
+
+  // Update Pokémon avatar when starter changes
+  const handleSetStarter = (name: string) => {
+    setStarter(name);
+    const selectedPokemon = startersByRegion[region].find(
+      (p) => p.name === name
+    );
+    if (selectedPokemon) {
+      setPokemonAvatar(selectedPokemon.image);
+    }
+  };
+
+  const handleSetRegion = (r: Region) => {
+    setRegion(r);
+    const newStarter = startersByRegion[r][0].name;
+    setStarter(newStarter);
+    setPokemonAvatar(startersByRegion[r][0].image);
+  };
+
   const handleSubmit = () => {
-    // Save trainer data to localStorage
     const trainerData = {
       gender,
       name,
       region,
       starter,
-      createdAt: new Date().toISOString(),
+      trainerAvatar,
+      pokemonAvatar,
     };
     localStorage.setItem("trainerProfile", JSON.stringify(trainerData));
-
-    // Redirect to profile page
     navigate("/profile");
   };
 
@@ -166,7 +105,7 @@ const SignupPage = () => {
                 <AvatarCard
                   gender="male"
                   currentGender={gender}
-                  setGender={setGender}
+                  setGender={handleSetGender} // Updated handler
                   title="Male Trainer"
                   description="Classic Pokémon trainer style"
                   colorClass="border-blue-500 bg-blue-50"
@@ -176,7 +115,7 @@ const SignupPage = () => {
                 <AvatarCard
                   gender="female"
                   currentGender={gender}
-                  setGender={setGender}
+                  setGender={handleSetGender} // Updated handler
                   title="Female Trainer"
                   description="Adventurer ready for challenges"
                   colorClass="border-pink-500 bg-pink-50"
@@ -219,7 +158,9 @@ const SignupPage = () => {
                     </label>
                     <select
                       value={region}
-                      onChange={(e) => setRegion(e.target.value as Region)}
+                      onChange={(e) =>
+                        handleSetRegion(e.target.value as Region)
+                      } // Updated handler
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                     >
                       <option value="Kanto">Kanto Region</option>
@@ -233,7 +174,7 @@ const SignupPage = () => {
                   gender={gender}
                   name={name}
                   region={region}
-                  image={gender === "male" ? maleAvatar : femaleAvatar}
+                  trainerImage={trainerAvatar}
                 />
               </div>
             </div>
@@ -257,7 +198,7 @@ const SignupPage = () => {
                     key={pokemon.name}
                     pokemon={pokemon}
                     selectedStarter={starter}
-                    setStarter={setStarter}
+                    setStarter={handleSetStarter}
                   />
                 ))}
               </div>
@@ -265,7 +206,8 @@ const SignupPage = () => {
               <SelectionSummary
                 starter={starter}
                 region={region}
-                starters={startersByRegion[region]} // Pass starters array
+                starters={startersByRegion[region]}
+                pokemonAvatar={pokemonAvatar}
               />
             </div>
           )}

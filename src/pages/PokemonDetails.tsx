@@ -16,7 +16,8 @@ import { GoHeart, GoHeartFill } from "react-icons/go";
 import PokemonMoves from "../components/pokemonDetail/PokemonMoves";
 import NoDetailFound from "../components/common/NoDetailFound";
 import { useAuth0 } from "@auth0/auth0-react";
-import LoginModal from "../components/common/LoginModal"; // Import from separate file
+import LoginModal from "../components/common/LoginModal";
+import { FaArrowLeft } from "react-icons/fa6";
 
 const PokemonDetail = () => {
   const { selectedPokemon } = useParams<{ selectedPokemon: string }>();
@@ -24,7 +25,7 @@ const PokemonDetail = () => {
     usePokemonDetail(selectedPokemon || "");
   const [isFavorite, setIsFavorite] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const { isAuthenticated } = useAuth0(); // Remove loginWithRedirect here
+  const { isAuthenticated } = useAuth0();
 
   useEffect(() => {
     if (!pokemonDetail || !isAuthenticated) return;
@@ -81,7 +82,7 @@ const PokemonDetail = () => {
           to="/"
           className="inline-flex items-center gap-2 text-blue-500 hover:underline"
         >
-          <span className="text-xl">&larr;</span> Back to List
+          <FaArrowLeft /> Back to List
         </Link>
         <div className="flex flex-col md:grid md:grid-cols-3 gap-6 items-center md:items-start">
           {/* Basic Information */}

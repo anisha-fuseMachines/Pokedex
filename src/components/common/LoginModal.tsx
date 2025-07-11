@@ -12,6 +12,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
 
   const handleLogin = (e: any) => {
     e.stopPropagation();
+    localStorage.removeItem("pokemonAppliedFilters");
     loginWithRedirect({
       appState: { returnTo: window.location.pathname },
     });

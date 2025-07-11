@@ -27,7 +27,10 @@ function App() {
             {/* Public login route */}
             <Route path="/login" element={<LoginButton />} />
             <Route path="/" element={<PokemonList />} />
-            <Route path="/:selectedPokemon" element={<PokemonDetail />} />
+            <Route
+              path="/pokemon/:selectedPokemon"
+              element={<PokemonDetail />}
+            />
             {/* Protected routes wrapper */}
             <Route element={<ProtectedRoute />}>
               <Route path="/signup" element={<SignupPage />} />

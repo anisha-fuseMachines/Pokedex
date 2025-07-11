@@ -8,10 +8,13 @@ import PokemonCard from "../components/pokemonList/PokemonCard";
 import SearchFilterDrawer from "../components/pokemonList/FilterDrawer";
 import { LuFilter } from "react-icons/lu";
 import NoResult from "../components/common/NoResult";
+
 const PokemonList = () => {
   const { pokemonList, loading, visibleCount, dispatch } = usePokemonContext();
   const visiblePokemon = pokemonList.slice(0, visibleCount);
 
+  // Fixed generation filter with dropdown
+  const [generationFilter, setGenerationFilter] = useState<string>("all");
   const [appliedFilters, setAppliedFilters] = useState<{
     types: string[];
     habitats: string[];
@@ -67,6 +70,20 @@ const PokemonList = () => {
       console.error("Search failed:", err);
     }
   }, [searchText, enrichResults]);
+
+  // Debounce the search input to avoid calling API on every keystroke
+  useEffect(() => {
+    if (!searchText.trim()) {
+      setFilteredPokemon(null);
+      return;
+    }
+
+    const handler = setTimeout(() => {
+      handleSearch();
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(handler);
+  }, [searchText, handleSearch]);
 
   // apply filters only, clear search text
   const handleFilterApply = useCallback(
@@ -126,7 +143,13 @@ const PokemonList = () => {
     appliedFilters.habitats.length > 0 ||
     Boolean(appliedFilters.classification);
 
-  const displayList = hasAnyFilter ? filteredPokemon ?? [] : visiblePokemon;
+  // Fixed generation filtering logic
+  const displayList = (
+    hasAnyFilter ? filteredPokemon ?? [] : visiblePokemon
+  ).filter((p) => {
+    if (generationFilter === "all") return true;
+    return p.generationName === generationFilter;
+  });
 
   const activeFilterCount =
     appliedFilters.types.length +
@@ -137,32 +160,45 @@ const PokemonList = () => {
 
   return (
     <>
-      {/* Search + Filters */}
-      <div className="flex items center justify-end px-4 py-4 w-full">
-        <input
-          className="border px-4 py-2 rounded w-full max-w-md border-white/50 text-white"
-          placeholder="Search Pokémon"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-        />
+      <div className="flex flex-col sm:flex-row items-center justify-end px-4 py-4 w-full gap-4 ">
+        {/* <div className="w-full sm:w-auto">
+          <select
+            id="generation-filter"
+            value={generationFilter}
+            onChange={(e) => setGenerationFilter(e.target.value)}
+            className="px-3 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          >
+            <option value="all">All Generations</option>
+            <option value="generation-i">Generation I</option>
+            <option value="generation-ii">Generation II</option>
+            <option value="generation-iii">Generation III</option>
+          </select>
+        </div> */}
+
+        <div className="flex-grow max-w-md w-full">
+          <input
+            className="border px-4 py-2 rounded w-full max-w-md border-white/50 text-white"
+            placeholder="Search Pokémon"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+        </div>
 
         <button
-          className="relative px-4 py-3 border border-blue-300 text-white rounded-lg hover:bg-blue-300 ml-4"
+          className="relative p-4  text-white rounded-4xl hover:bg-blue-300/20 flex items-center gap-2 w-full sm:w-auto justify-center"
           onClick={() => setDrawerOpen(true)}
         >
-          <LuFilter size={18} className="hover:text-dark" />
+          <LuFilter size={20} />
           {activeFilterCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-600 rounded-full text-xs px-2">
+            <span className="absolute -top-2 -right-2 bg-red-600 rounded-full text-xs px-2 py-1">
               {activeFilterCount}
             </span>
           )}
         </button>
       </div>
 
-      {/* Active filters banner */}
       {hasAnyFilter && displayList.length > 0 && (
-        <div className="px-4 py-2 text-sm text-gray-600">
+        <div className="px-4 py-2 text-sm text-gray-300 rounded-lg mx-4 w-full text-left">
           Showing results for:
           {appliedFilters.types.length > 0 &&
             ` Types: ${appliedFilters.types.join(", ")}`}
@@ -170,28 +206,31 @@ const PokemonList = () => {
             ` | Habitats: ${appliedFilters.habitats.join(", ")}`}
           {appliedFilters.classification &&
             ` | Classification: ${appliedFilters.classification}`}
+          {searchText.trim() && ` "${searchText}"`}
         </div>
       )}
 
-      {/* Grid or No Results */}
-      <div className="px-4 py-6">
-        {displayList.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-4 md:gap-5 2xl:grid-cols-4 lg:gap-6 xl:gap-6 w-full max-w-9xl mx-auto px-4 py-6">
+      <div className="px-4 py-6 ">
+        {(hasAnyFilter &&
+          filteredPokemon !== null &&
+          displayList.length === 0) ||
+        (!hasAnyFilter && displayList.length === 0) ? (
+          <NoResult />
+        ) : (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-4 md:gap-5 2xl:grid-cols-4 lg:gap-6 xl:gap-6 w-full max-w-9xl mx-auto ">
             {displayList.map((pokemon) => (
-              <Link to={`/${pokemon.name}`} key={pokemon.id}>
+              <Link to={`pokemon/${pokemon.name}`} key={pokemon.id}>
                 <PokemonCard pokemon={pokemon} />
               </Link>
             ))}
           </div>
-        ) : (
-          <NoResult />
         )}
       </div>
 
       {!hasAnyFilter && visibleCount < pokemonList.length && (
         <div className="flex justify-center mb-6">
           <button
-            className="bg-pink-200 hover:bg-pink-300 text-pink-700 px-6 py-2 rounded-lg"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200"
             onClick={() => dispatch({ type: "LOAD_MORE" })}
           >
             Load More

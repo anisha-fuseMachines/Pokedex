@@ -10,13 +10,8 @@ interface TrainerProfile {
   name: string;
   region: string;
   starter: string;
-  createdAt: string;
-}
-
-interface PokemonData {
-  name: string;
-  image: string;
-  type: string;
+  trainerAvatar: string;
+  pokemonAvatar: string;
 }
 
 const ProfilePage = () => {
@@ -24,9 +19,8 @@ const ProfilePage = () => {
   const [trainerProfile, setTrainerProfile] = useState<TrainerProfile | null>(
     null
   );
-  const [starterPokemon, setStarterPokemon] = useState<PokemonData | null>(
-    null
-  );
+  const [pokemonType, setPokemonType] = useState<string | null>(null); // Simplified state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Load trainer profile from localStorage
@@ -35,25 +29,25 @@ const ProfilePage = () => {
       const profile: TrainerProfile = JSON.parse(profileData);
       setTrainerProfile(profile);
 
-      // Get starter pokemon details
-      fetchStarterPokemon(profile.starter);
+      // Get pokemon type only
+      fetchPokemonType(profile.starter);
+    } else {
+      setLoading(false);
     }
   }, []);
 
-  const fetchStarterPokemon = async (pokemonName: string) => {
+  const fetchPokemonType = async (pokemonName: string) => {
     try {
+      setLoading(true);
       const response = await fetch(
         `https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`
       );
       const data = await response.json();
-
-      setStarterPokemon({
-        name: data.name,
-        image: data.sprites.other["official-artwork"].front_default,
-        type: data.types[0].type.name,
-      });
+      setPokemonType(data.types[0].type.name);
     } catch (error) {
-      console.error("Failed to fetch starter pokemon", error);
+      console.error("Failed to fetch pokemon type", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,6 +68,14 @@ const ProfilePage = () => {
   }
 
   if (!trainerProfile) {
+    if (loading) {
+      return (
+        <div className="flex flex-col items-center justify-center min-h-screen p-4">
+          <h2 className="text-2xl font-bold mb-4">Loading Profile...</h2>
+        </div>
+      );
+    }
+
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <h2 className="text-2xl font-bold mb-4">No Trainer Profile Found</h2>
@@ -91,24 +93,22 @@ const ProfilePage = () => {
     );
   }
 
-  // Get color based on gender
-  const genderColor =
-    trainerProfile.gender === "male"
-      ? "bg-blue-100 border-blue-300 text-blue-800"
-      : "bg-pink-100 border-pink-300 text-pink-800";
-
   // Get type color classes
   const typeColors: Record<string, string> = {
     grass: "bg-green-100 text-green-800 border-green-300",
     fire: "bg-red-100 text-red-800 border-red-300",
     water: "bg-blue-100 text-blue-800 border-blue-300",
     electric: "bg-yellow-100 text-yellow-800 border-yellow-300",
+    poison: "bg-purple-100 text-purple-800 border-purple-300",
+    flying: "bg-indigo-100 text-indigo-800 border-indigo-300",
+    bug: "bg-lime-100 text-lime-800 border-lime-300",
+    normal: "bg-gray-100 text-gray-800 border-gray-300",
     // Add more types as needed
   };
 
-  const pokemonType = starterPokemon?.type || "";
-  const typeColorClass =
-    typeColors[pokemonType] || "bg-gray-100 text-gray-800 border-gray-300";
+  const typeColorClass = pokemonType
+    ? typeColors[pokemonType]
+    : "bg-gray-100 text-gray-800 border-gray-300";
 
   return (
     <div className="min-h-screen py-12 px-4">
@@ -139,12 +139,12 @@ const ProfilePage = () => {
           {/* Trainer Information Card */}
           <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 lg:col-span-2">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-              <div
-                className={`w-32 h-32 rounded-full ${genderColor} flex items-center justify-center`}
-              >
-                <div className="text-4xl">
-                  {trainerProfile.gender === "male" ? "♂" : "♀"}
-                </div>
+              <div className="w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border-4 border-gray-300">
+                <img
+                  src={trainerProfile.trainerAvatar}
+                  alt="Trainer Avatar"
+                  className="w-full h-full object-contain"
+                />
               </div>
 
               <div className="flex-1 text-center md:text-left">
@@ -153,9 +153,9 @@ const ProfilePage = () => {
                 </h2>
                 <div className="mt-4 space-y-3">
                   <div>
-                    <p className="text-sm text-gray-500">Registered On</p>
-                    <p className="font-medium">
-                      {new Date(trainerProfile.createdAt).toLocaleDateString()}
+                    <p className="text-sm text-gray-500">Gender</p>
+                    <p className="font-medium capitalize">
+                      {trainerProfile.gender}
                     </p>
                   </div>
                   <div>
@@ -181,38 +181,36 @@ const ProfilePage = () => {
               Starter Pokémon
             </h3>
 
-            {starterPokemon ? (
-              <div className="flex flex-col items-center">
-                <div className="w-48 h-48 bg-gray-100 rounded-full p-4 mb-4">
-                  <img
-                    src={starterPokemon.image}
-                    alt={starterPokemon.name}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
+            <div className="flex flex-col items-center">
+              <div className="w-48 h-48 bg-gray-100 rounded-full p-4 mb-4 border-4 border-gray-300">
+                <img
+                  src={trainerProfile.pokemonAvatar}
+                  alt={trainerProfile.starter}
+                  className="w-full h-full object-contain"
+                />
+              </div>
 
-                <h4 className="text-xl font-bold text-gray-800 capitalize">
-                  {starterPokemon.name}
-                </h4>
+              <h4 className="text-xl font-bold text-gray-800 capitalize">
+                {trainerProfile.starter}
+              </h4>
 
-                <div className="mt-2">
+              <div className="mt-2">
+                {loading ? (
+                  <div className="h-8 w-24 bg-gray-200 rounded-full animate-pulse"></div>
+                ) : (
                   <span
                     className={`capitalize px-3 py-1 rounded-full text-sm font-medium border ${typeColorClass}`}
                   >
-                    {pokemonType}
+                    {pokemonType || "Unknown"}
                   </span>
-                </div>
+                )}
+              </div>
 
-                <p className="mt-4 text-gray-600 text-center">
-                  Your faithful companion since the beginning of your journey in{" "}
-                  {trainerProfile.region}
-                </p>
-              </div>
-            ) : (
-              <div className="flex justify-center items-center h-48">
-                <p>Loading starter pokemon...</p>
-              </div>
-            )}
+              <p className="mt-4 text-gray-600 text-center">
+                Your faithful companion since the beginning of your journey in{" "}
+                {trainerProfile.region}
+              </p>
+            </div>
           </div>
         </div>
       </div>

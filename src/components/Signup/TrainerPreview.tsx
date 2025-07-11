@@ -4,21 +4,22 @@ export const TrainerProfilePreview = ({
   gender,
   name,
   region,
-  image,
+  trainerImage,
 }: {
   gender: Gender;
   name: string;
   region: string;
-  image?: string;
+  trainerImage?: string;
 }) => (
   <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
     <h3 className="font-bold text-gray-800 mb-4">Your Trainer Profile</h3>
     <div className="flex items-center">
-      <div
+      <img
+        src={trainerImage}
         className={`w-16 h-16 rounded-full mr-4 ${
           gender === "male" ? "bg-blue-300" : "bg-pink-300"
         }`}
-      ></div>
+      />
       <div>
         <p className="font-semibold text-gray-800">{name || "New Trainer"}</p>
         <p className="text-sm text-gray-600 mt-1">From {region} Region</p>

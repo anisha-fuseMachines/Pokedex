@@ -4,6 +4,21 @@ const client = axios.create({
   baseURL: import.meta.env.VITE_POKE_API_URL,
 });
 
+export const fetchPokemonList = async (
+  limit = 350,
+  offset = 0
+): Promise<PokemonListResponse> => {
+  try {
+    const response = await client.get(
+      `pokemon?limit=${limit}&offset=${offset}`
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      `Failed to fetch Pokémon list: ${(error as AxiosError).message}`
+    );
+  }
+};
 export interface PokemonListResponse {
   results: { name: string; url: string }[];
   count: number;
@@ -34,22 +49,6 @@ export const fetchGen1To3PokemonNames = async () => {
   const sortedSpecies = detailedSpecies.sort((a, b) => a.order - b.order);
 
   return sortedSpecies;
-};
-
-export const fetchPokemonList = async (
-  limit = 1000,
-  offset = 0
-): Promise<PokemonListResponse> => {
-  try {
-    const response = await client.get(
-      `pokemon?limit=${limit}&offset=${offset}`
-    );
-    return response.data;
-  } catch (error) {
-    throw new Error(
-      `Failed to fetch Pokémon list: ${(error as AxiosError).message}`
-    );
-  }
 };
 
 export const getAllGeneration = async () => {

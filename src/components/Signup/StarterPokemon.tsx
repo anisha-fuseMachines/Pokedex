@@ -83,10 +83,12 @@ export const SelectionSummary = ({
   starter,
   region,
   starters,
+  pokemonAvatar,
 }: {
   starter: string;
   region: string;
   starters: Pokemon[];
+  pokemonAvatar: string;
 }) => {
   const pokemon = starters.find((p) => p.name === starter);
 

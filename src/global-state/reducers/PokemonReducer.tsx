@@ -1,13 +1,13 @@
 import type { PokemonListItem } from "../../types/pokemonList";
 import type { PokemonState } from "../contexts/PokemonContext";
 
-
 export type PokemonAction =
   | { type: "SET_LIST"; payload: PokemonListItem[] }
   | { type: "SET_SEARCH_RESULTS"; payload: PokemonListItem[] }
   | { type: "CLEAR_SEARCH" }
   | { type: "SET_LOADING"; payload: boolean }
-  | { type: "LOAD_MORE" };
+  | { type: "LOAD_MORE" }
+  | { type: "APPEND_TO_LIST"; payload: PokemonListItem[] };
 
 export const pokemonReducer = (
   state: PokemonState,
@@ -20,6 +20,15 @@ export const pokemonReducer = (
         pokemonList: action.payload,
         loading: false,
       };
+    case "APPEND_TO_LIST":
+      const newPokemon = action.payload.filter(
+        (p) => !state.pokemonList.some((existing) => existing.id === p.id)
+      );
+      return {
+        ...state,
+        pokemonList: [...state.pokemonList, ...newPokemon],
+      };
+
     case "SET_SEARCH_RESULTS":
       return {
         ...state,

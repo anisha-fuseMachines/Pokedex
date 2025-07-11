@@ -46,7 +46,7 @@ const FavoriteList = () => {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-4 md:gap-5 2xl:grid-cols-4 lg:gap-6 xl:gap-6 w-full max-w-9xl mx-auto px-4 py-6 [height:calc(100vh_-_67px)]">
       {favorites.map((pokemon) => (
-        <Link to={`/${pokemon.name}`} key={pokemon.id}>
+        <Link to={`/pokemon/${pokemon.name}`} key={pokemon.id}>
           <PokemonCard pokemon={pokemon} onToggleFavorite={handleToggle} />
         </Link>
       ))}
